@@ -1,0 +1,10 @@
+.schema-table{
+	margin:20px auto;
+}
+.schema-table table{
+	font-size: 14px;
+	text-align: center;
+}
+.schema-table th{
+	text-align: center;
+}

@@ -1,0 +1,2 @@
+export const SET_MAPPING = 'SET_MAPPING';
+export const REMOVE_MAPPING = 'REMOVE_MAPPING';
