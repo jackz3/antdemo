@@ -9,9 +9,16 @@
 	text-align: center;
 }
 
+div.ant-alert{
+	font-size: 14px;
+}
+
 span.selected{
 	color:rgb(57, 163, 14);
 }
 span.sum.selected{
 	color:#FF6100;
+}
+span.disabled{
+	color:rgb(236, 236, 236);
 }

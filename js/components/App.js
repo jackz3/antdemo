@@ -11,16 +11,9 @@ class Home extends React.Component{
 	constructor(props){
 		super(props);
   }
-	showContent(type){
-		
-	}
-	hideMenu(){
-		
-	}
 	render(){
     let columns=this.props.schema.definitions.map(x=>{
-			
-			return {title:<span className={(x.sum?'sum ':'')+(x.mapping?'selected':'')}>{x.label}</span>,dataIndex:x.label}
+			return {title:<span className={(x.sum?'sum ':'')+(x.mapping?'selected':'')}>{x.label+(x.sum?'[计算列]':'')}</span>,dataIndex:x.label}
 		});
 		let types={key:1};
 		let selection=this.props.schema.definitions.filter(x=>x.mapping);
@@ -66,12 +59,20 @@ class Csv extends React.Component{
 	render(){
 		const colCount=this.props.colsCount;
 		let definitions=this.props.definitions;
+		let selection=definitions.filter(x=>x.mapping).map(x=>parseInt(x.mapping));
 		let scrollX=colCount*120;
 		let headers=[],rows=[];
 		for(let i=0;i<colCount;i++){
+			let selected=selection.indexOf(i)>=0;
+			let isSum=definitions.find(x=>x.sum&&x.mapping==i);
+			let disabled=false;
+			if(selection.length===10 && !selected){
+				disabled=true;
+			}
 			headers.push({
-				title:'col'+(i+1),
+				title:<span className={(isSum?'sum ':'')+(selected?'selected':'')+(disabled?'disabled':'')}>{'col'+(i+1)}</span>,
 				dataIndex:'c'+i,
+				width:120,
 				render:(value,row,index)=>{
 					if(index===0){
 						if(!definitions.find(x=>x.mapping==i)){
@@ -81,7 +82,7 @@ class Csv extends React.Component{
 						}
 						return <CsvSelect dispatch={this.props.dispatch} col={i} definitions={this.props.definitions} />
 					}else{
-						return value;
+						return <span className={disabled?'disabled':''}>{value}</span>
 					}
 				}
 			});
@@ -140,7 +141,7 @@ class CsvSelect extends React.Component{
 			}
 		}
 		return (
-			<Select multiple style={{ width: '100px',height:'30px' }} value={v} onChange={this.onChange.bind(this)}>
+			<Select multiple notFoundContent="无可选列" style={{ width: '100px',height:'30px' }} value={v} onChange={this.onChange.bind(this)}>
 			{
 				options.map(x=><Option key={x.label} value={x.label}>{x.label}</Option>)
 			}

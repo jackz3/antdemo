@@ -2,15 +2,15 @@ import * as actionTypes from '../comm/actionTypes';
 
 let definitions=[
   {label:'姓名',type:'string'},
-  {label:'性别',type:'boolean',selected:false},
-	{label:'生日',type:'date',selected:false},
-	{label:'体重',type:'number',selected:false},
-	{label:'住址',type:'string',selected:false},
-	{label:'工作',type:'string',selected:false},
-	{label:'薪水',type:'number',selected:false,sum:true},
-	{label:'城市',type:'string',selected:false},
-	{label:'等级',type:'number',selected:false},
-	{label:'是否会员',type:'boolean',selected:false}
+  {label:'性别',type:'boolean'},
+	{label:'生日',type:'date'},
+	{label:'体重',type:'number'},
+	{label:'住址',type:'string'},
+	{label:'工作',type:'string'},
+	{label:'积分',type:'number',sum:true},
+	{label:'城市',type:'string'},
+	{label:'等级',type:'number'},
+	{label:'是否会员',type:'boolean'}
 ];
 // const csv=[
 // 	['col1','col2','col3','col4','col5','col6','col7','col8','col9','col10']
