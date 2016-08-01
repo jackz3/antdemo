@@ -18,7 +18,10 @@ class Home extends React.Component{
 		
 	}
 	render(){
-    let columns=this.props.schema.definitions.map(x=>({title:x.label,dataIndex:x.label}));
+    let columns=this.props.schema.definitions.map(x=>{
+			
+			return {title:<span className={(x.sum?'sum ':'')+(x.mapping?'selected':'')}>{x.label}</span>,dataIndex:x.label}
+		});
 		let types={key:1};
 		let selection=this.props.schema.definitions.filter(x=>x.mapping);
 		this.props.schema.definitions.forEach(x=>{
@@ -62,6 +65,7 @@ class Home extends React.Component{
 class Csv extends React.Component{
 	render(){
 		const colCount=this.props.colsCount;
+		let definitions=this.props.definitions;
 		let scrollX=colCount*120;
 		let headers=[],rows=[];
 		for(let i=0;i<colCount;i++){
@@ -70,6 +74,11 @@ class Csv extends React.Component{
 				dataIndex:'c'+i,
 				render:(value,row,index)=>{
 					if(index===0){
+						if(!definitions.find(x=>x.mapping==i)){
+							if(definitions.filter(x=>x.mapping).length===10){
+								return null;
+							}
+						}
 						return <CsvSelect dispatch={this.props.dispatch} col={i} definitions={this.props.definitions} />
 					}else{
 						return value;

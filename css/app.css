@@ -8,3 +8,10 @@
 .schema-table th{
 	text-align: center;
 }
+
+span.selected{
+	color:rgb(57, 163, 14);
+}
+span.sum.selected{
+	color:#FF6100;
+}
