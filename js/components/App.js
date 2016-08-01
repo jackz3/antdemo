@@ -113,6 +113,13 @@ class CsvSelect extends React.Component{
 		let node=ReactDOM.findDOMNode(this).querySelector('li.ant-select-selection__choice span');
 		node.style.display='none';
 	}
+	componentDidUpdate(){
+		let value=this.props.definitions.find(x=>x.mapping==this.props.col);
+		if(!value){
+			let node=ReactDOM.findDOMNode(this).querySelector('li.ant-select-selection__choice span');
+			node.style.display='none';
+		}
+	}
 	onChange(values){
 	//	debugger
 		if(!values.length){
