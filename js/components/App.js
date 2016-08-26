@@ -1,165 +1,58 @@
-import React from 'react';
-import ReactDOM from 'react-dom'
-import { connect } from 'react-redux'
-import {Button,Table,Select,Alert,Row,Col} from 'antd';
-import {getUrlParam} from '../comm/utils';
-import {setMapping,removeMapping} from '../actions/schema';
+import React from 'react'
+import { Menu, Icon } from 'antd'
+import { Link } from 'react-router'
+const SubMenu = Menu.SubMenu
+const MenuItemGroup = Menu.ItemGroup
 
-const colsCount=getUrlParam('cols')||10;
-
-class Home extends React.Component{
-	constructor(props){
-		super(props);
+class App extends React.Component{
+  constructor(props){
+    super(props)
+    this.state={
+      current:'mail'
+    }
   }
-	render(){
-    let columns=this.props.schema.definitions.map(x=>{
-			return {title:<span className={(x.sum?'sum ':'')+(x.mapping?'selected':'')}>{x.label+(x.sum?'[计算列]':'')}</span>,dataIndex:x.label}
-		});
-		let types={key:1};
-		let selection=this.props.schema.definitions.filter(x=>x.mapping);
-		this.props.schema.definitions.forEach(x=>{
-      types[x.label]=x.type;
+  onMenuClick(e) {
+    console.log('click ', e);
+    this.setState({
+      current: e.key,
     });
-		let alert={};
-		let btnDisabled=true;
-		if(colsCount<columns.length){
-			alert.type="error",
-			alert.message="csv文件列小于Schema定义的列数，请重新上传文件"
-		}else{
-			if(selection.length===columns.length){
-				alert.type="success";
-				alert.message="您已完成csv到schema对应关系的设置，请按执行继续";
-				btnDisabled=false;
-			}else{
-				alert.type='info';
-				alert.message=`请设置csv文件列的对应关系。已设置${selection.length}列，还需设置${columns.length-selection.length}列`;
-			}
-		}
-
-		return (
-			<div style={{width:'90%',margin:'30px auto',minWidth:'900px'}}>
-				<Table bordered columns={columns}  dataSource={[types]} pagination={false}
-					title={() => 'Schema定义'}
-				 	size="middle" className="schema-table" />
-				<Row>
-					<Col span={20}><Alert message={alert.message} showIcon type={alert.type} /></Col>
-					<Col span={1}></Col>
-		      <Col span={3}>
-						<Button style={{height:'32px',float:'right'}} disabled={btnDisabled} type="primary"
-							icon={btnDisabled?'cross-circle-o':'check-circle-o'}>执行</Button>
-					</Col>
-				</Row>
-				<Csv dispatch={this.props.dispatch} colsCount={colsCount} selection={selection} definitions={this.props.schema.definitions} />
-			</div>
-  	)
-	}
+  }
+  render(){
+    return (
+      <div>
+        <Menu onClick={this.onMenuClick.bind(this)} selectedKeys={[this.state.current]} mode="horizontal">
+          <Menu.Item key="mail">
+            <Icon type="mail" />Home
+          </Menu.Item>
+          <Menu.Item key="login">
+            <Link to="/login"><Icon type="user" />Login</Link>
+          </Menu.Item>
+          <Menu.Item key="posts">
+            <Link to="/posts"><Icon type="edit" />posts</Link>
+          </Menu.Item>
+          <Menu.Item key="table">
+            <Link to="/table"><Icon type="bars" />table</Link>
+          </Menu.Item>
+        <Menu.Item key="app" disabled>
+          <Icon type="appstore" />导航二
+        </Menu.Item>
+        <SubMenu title={<span><Icon type="setting" />导航 - 子菜单</span>}>
+          <MenuItemGroup title="分组1">
+            <Menu.Item key="setting:1">选项1</Menu.Item>
+            <Menu.Item key="setting:2">选项2</Menu.Item>
+          </MenuItemGroup>
+          <MenuItemGroup title="分组2">
+            <Menu.Item key="setting:3">选项3</Menu.Item>
+            <Menu.Item key="setting:4">选项4</Menu.Item>
+          </MenuItemGroup>
+        </SubMenu>
+        <Menu.Item key="alipay">
+          <a href="http://www.alipay.com/" target="_blank">导航四 - 链接</a>
+        </Menu.Item>
+      </Menu>
+      {this.props.children}
+      </div>)
+  }
 }
 
-class Csv extends React.Component{
-	render(){
-		const colCount=this.props.colsCount;
-		let definitions=this.props.definitions;
-		let selection=definitions.filter(x=>x.mapping).map(x=>parseInt(x.mapping));
-		let scrollX=colCount*120;
-		let headers=[],rows=[];
-		for(let i=0;i<colCount;i++){
-			let selected=selection.indexOf(i)>=0;
-			let isSum=definitions.find(x=>x.sum&&x.mapping==i);
-			let disabled=false;
-			if(selection.length===10 && !selected){
-				disabled=true;
-			}
-			headers.push({
-				title:<span className={(isSum?'sum ':'')+(selected?'selected':'')+(disabled?'disabled':'')}>{'col'+(i+1)}</span>,
-				dataIndex:'c'+i,
-				width:120,
-				render:(value,row,index)=>{
-					if(index===0){
-						if(!definitions.find(x=>x.mapping==i)){
-							if(definitions.filter(x=>x.mapping).length===10){
-								return null;
-							}
-						}
-						return <CsvSelect dispatch={this.props.dispatch} col={i} definitions={this.props.definitions} />
-					}else{
-						return <span className={disabled?'disabled':''}>{value}</span>
-					}
-				}
-			});
-		}
-		for(let i=0;i<10;i++){
-			let row={key:i};
-			for(let j=0;j<colCount;j++){
-				row['c'+j]='data'+i;
-			}
-			rows.push(row);
-		}
-		return (
-			<div>
-				<Table bordered columns={headers}  dataSource={rows} pagination={false}
-					title={() => 'CSV文件'} size="middle" scroll={{ x: scrollX }} />
-			</div>
-		)
-	}
-}
-class CsvSelect extends React.Component{
-	constructor(props){
-		super(props);
-		this.state={
-			hideOptions:true
-		}
-	}
-	componentDidMount(){
-		let node=ReactDOM.findDOMNode(this).querySelector('li.ant-select-selection__choice span');
-		node.style.display='none';
-	}
-	componentDidUpdate(){
-		let value=this.props.definitions.find(x=>x.mapping==this.props.col);
-		if(!value){
-			let node=ReactDOM.findDOMNode(this).querySelector('li.ant-select-selection__choice span');
-			node.style.display='none';
-		}
-	}
-	onChange(values){
-	//	debugger
-		if(!values.length){
-			return this.props.dispatch(removeMapping(this.props.col.toString()));
-		}
-		let value=values[values.length-1];
-		if(value==='--更多--'){
-			this.setState({hideOptions:false});
-		}else{
-			this.props.dispatch(setMapping(value,this.props.col.toString()));
-		}
-	}
-	render(){
-		const Option = Select.Option;
-		const maxLength=6;
-		let value=this.props.definitions.find(x=>x.mapping==this.props.col);
-		let v='请选择';
-		if(value){
-			v=value.label;
-		}
-		let options=this.props.definitions.filter(x=>!x.mapping);
-		if(options.length>maxLength){
-			if(this.state.hideOptions){
-				options=options.slice(0,maxLength);
-				options.push({label:'--更多--'})
-			}
-		}
-		return (
-			<Select multiple notFoundContent="无可选列" style={{ width: '100px',height:'30px' }} value={v} onChange={this.onChange.bind(this)}>
-			{
-				options.map(x=><Option key={x.label} value={x.label}>{x.label}</Option>)
-			}
-			</Select>
-		)
-	}
-}
-
-function mapStateToProps(state) {
-  return {
-    ...state
-  };
-};
-export default connect(mapStateToProps)(Home);
+  export default App

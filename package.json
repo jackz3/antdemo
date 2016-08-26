@@ -4,7 +4,7 @@
   "description": "a ant design demo",
   "main": "index.html",
   "scripts": {
-    "start": "webpack-dev-server --progress",
+    "start": "webpack-dev-server --inline --progress --history-api-fallback",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,7 +22,11 @@
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
     "react-redux": "^4.4.5",
-    "redux": "^3.5.2"
+    "react-router": "^2.7.0",
+    "redux": "^3.5.2",
+    "redux-promise-middleware": "^4.0.0",
+    "redux-thunk": "^2.1.0",
+    "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.11.4",
