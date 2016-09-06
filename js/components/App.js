@@ -1,14 +1,49 @@
 import React from 'react'
-import { Menu, Icon } from 'antd'
+import { Icon,Row,Col,Button,Dropdown } from 'antd'
 import { Link } from 'react-router'
-const SubMenu = Menu.SubMenu
-const MenuItemGroup = Menu.ItemGroup
+import MainMenu from './Menu'
 
+class UserMenu extends React.Component{
+  render(){
+    return (
+      <div className="user-profile-card-wrapper">
+        <Row style={{margin:'16px auto'}} justify="center">
+          <Col span={8}>
+            <div className="avatar-wrapper">
+              <img src='/img/user1-128x128.jpg'></img>
+              <Button>更 改</Button>
+            </div>
+          </Col>
+
+          <Col span={16} className="info-wrapper">
+            <h2 className="title"><span >Jack</span>[<b>管理员</b>]</h2>
+            <div className="items">
+              <p>jack@admaster.com.cn</p>
+            </div>
+            <Row>
+              <Col span={12}><Button icon="setting">个人设置</Button></Col>
+              <Col span={12}><Button icon="exclamation-circle">修改密码</Button></Col>
+            </Row>
+          </Col>
+        </Row>
+        <Row className="row footer-bar-wrapper">
+          <Col span={8}>
+            <Button icon="user">个人信息</Button>
+          </Col>
+          <div style={{textAlign:'right'}} span={8} offset={8}>
+            <Button type="ghost" icon="double-right">退出</Button>
+          </div>
+        </Row>
+      </div>
+    )
+  }
+}
 class App extends React.Component{
   constructor(props){
     super(props)
     this.state={
-      current:'mail'
+      showMenu:true,
+      showUserMenu:false
     }
   }
   onMenuClick(e) {
@@ -17,42 +52,39 @@ class App extends React.Component{
       current: e.key,
     });
   }
+  toggleMenu(e){
+    this.setState({showMenu:!this.state.showMenu})
+  }
   render(){
     return (
-      <div>
-        <Menu onClick={this.onMenuClick.bind(this)} selectedKeys={[this.state.current]} mode="horizontal">
-          <Menu.Item key="mail">
-            <Icon type="mail" />Home
-          </Menu.Item>
-          <Menu.Item key="login">
-            <Link to="/login"><Icon type="user" />Login</Link>
-          </Menu.Item>
-          <Menu.Item key="posts">
-            <Link to="/posts"><Icon type="edit" />posts</Link>
-          </Menu.Item>
-          <Menu.Item key="table">
-            <Link to="/table"><Icon type="bars" />table</Link>
-          </Menu.Item>
-        <Menu.Item key="app" disabled>
-          <Icon type="appstore" />导航二
-        </Menu.Item>
-        <SubMenu title={<span><Icon type="setting" />导航 - 子菜单</span>}>
-          <MenuItemGroup title="分组1">
-            <Menu.Item key="setting:1">选项1</Menu.Item>
-            <Menu.Item key="setting:2">选项2</Menu.Item>
-          </MenuItemGroup>
-          <MenuItemGroup title="分组2">
-            <Menu.Item key="setting:3">选项3</Menu.Item>
-            <Menu.Item key="setting:4">选项4</Menu.Item>
-          </MenuItemGroup>
-        </SubMenu>
-        <Menu.Item key="alipay">
-          <a href="http://www.alipay.com/" target="_blank">导航四 - 链接</a>
-        </Menu.Item>
-      </Menu>
-      {this.props.children}
+      <div id="app">
+        <Row id="header-bar" style={{height:'48px'}} align="middle">
+          <Col span={8}>
+            <div className="logo-wrapper" style={{height:'48px'}}>
+              <Button onClick={this.toggleMenu.bind(this)} icon={this.state.showMenu?"menu-fold":'menu-unfold'} />
+              <h1 className="logo">
+                <Link to="/">BD-Hub</Link>
+              </h1>
+            </div>
+          </Col>
+          <Col span={8}></Col>
+          <Col span={8}>
+            <Dropdown overlay={<UserMenu />} trigger={['click']}>
+              <div className="userinfo">
+              <a className="ant-dropdown-link" href="#">
+                <img className="avatar" src="/img/user1-128x128.jpg" />
+                Jack.Zhu <Icon type="down" />
+              </a>
+              </div>
+            </Dropdown>
+          </Col>
+        </Row>
+        <MainMenu isShow={this.state.showMenu} />
+        <div id="content-wrapper" className={this.state.showMenu?'':'full-page'}>
+        {this.props.children}
+        </div>
       </div>)
   }
 }
 
-  export default App
+export default App

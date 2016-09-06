@@ -1,5 +1,5 @@
 import React from 'react';
-import {Page,List,ListItem,ListHeader,Toolbar, Button} from 'react-onsenui';
+import {Page,List,ListItem,ListHeader,Toolbar, Button} from 'ant';
 
 export default class StockList extends React.Component {
   
