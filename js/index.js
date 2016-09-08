@@ -8,6 +8,8 @@ import App from './components/App'
 import Home from './components/Home'
 import Posts from './components/Posts'
 import Audiences from './components/Audiences'
+import AudienceForm from './components/Form'
+import DataSources from './components/DataSources'
 
 let store=configureStore();
 
@@ -19,10 +21,11 @@ ReactDOM.render(
         {/*
         <Route path="/repos" component={Repos}>
           <Route path="/repos/:userName/:repoName" component={Repo}/>
-        </Route><Route path="/audiences/create" component={Audiences.Create} />
+        </Route>
         */}
+        <Route path="/data_sources" component={DataSources}/>
         <Route path="/audiences" component={Audiences}/>
-        
+        <Route path="/audiences/create" component={AudienceForm} />
         <Route path="/posts" component={Posts}/>
         <Route path="/table" component={Table}/>
       </Route>

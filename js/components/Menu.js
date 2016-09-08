@@ -21,7 +21,7 @@ class MainMenu extends React.Component{
       <div id="mainmenu" className={this.props.isShow?'':'fold'}>
         <Menu onClick={this.onMenuClick.bind(this)} selectedKeys={[this.state.current]} mode="inline">
           <Menu.Item key="mail">
-            <Link to="/posts"><Icon type="link" />数据接入</Link>
+            <Link to="/data_sources"><Icon type="link" />数据接入</Link>
           </Menu.Item>
         </Menu>
         <div className="line" />

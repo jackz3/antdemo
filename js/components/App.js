@@ -18,7 +18,7 @@ class UserMenu extends React.Component{
           <Col span={16} className="info-wrapper">
             <h2 className="title"><span >Jack</span>[<b>管理员</b>]</h2>
             <div className="items">
-              <p>jack@admaster.com.cn</p>
+              <p>jack@bdh.com</p>
             </div>
             <Row>
               <Col span={12}><Button icon="setting">个人设置</Button></Col>
@@ -62,7 +62,8 @@ class App extends React.Component{
           <Col span={8}>
             <div className="logo-wrapper" style={{height:'48px'}}>
               <Button onClick={this.toggleMenu.bind(this)} icon={this.state.showMenu?"menu-fold":'menu-unfold'} />
-              <h1 className="logo">
+              <img src="http://www.admaster.com.cn/public/images/menuxia_14.png" />
+              <h1>
                 <Link to="/">BD-Hub</Link>
               </h1>
             </div>
