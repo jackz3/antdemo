@@ -227,6 +227,7 @@ span.disabled{
 }
 #mainmenu .ant-menu-item-selected{
     background: #e7e7e7!important;
+    background: #eaf8fe!important;    
 }
 #mainmenu.fold {
     opacity: 0;

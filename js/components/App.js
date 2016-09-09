@@ -46,12 +46,6 @@ class App extends React.Component{
       showUserMenu:false
     }
   }
-  onMenuClick(e) {
-    console.log('click ', e);
-    this.setState({
-      current: e.key,
-    });
-  }
   toggleMenu(e){
     this.setState({showMenu:!this.state.showMenu})
   }
